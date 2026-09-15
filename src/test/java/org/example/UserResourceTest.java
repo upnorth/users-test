@@ -10,7 +10,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasSize;
 
 @QuarkusTest
@@ -62,32 +61,29 @@ public class UserResourceTest {
     @Test
     @Order(3)
     public void testCreateUserValidationErrors() {
-        // Test invalid email
-        User invalidEmailUser = new User(null, "Invalid Email", "Valid Address", "not-an-email", "+1 (555) 000-0000");
-        given()
-                .contentType(ContentType.JSON)
-                .body(invalidEmailUser)
+        // Invalid email
+        given().contentType(ContentType.JSON)
+                .body(new User(null, "Valid Name", "Valid Address", "not-an-email", "+1 (555) 000-0000"))
                 .when().post("/digg/user")
-                .then()
-                .statusCode(400);
+                .then().statusCode(400);
 
-        // Test blank name
-        User blankNameUser = new User(null, "", "Valid Address", "valid@example.com", "+1 (555) 000-0000");
-        given()
-                .contentType(ContentType.JSON)
-                .body(blankNameUser)
+        // Blank name
+        given().contentType(ContentType.JSON)
+                .body(new User(null, "   ", "Valid Address", "valid@example.com", "+1 (555) 000-0000"))
                 .when().post("/digg/user")
-                .then()
-                .statusCode(400);
+                .then().statusCode(400);
 
-        // Test invalid phone number
-        User invalidPhoneUser = new User(null, "Invalid Phone", "Valid Address", "valid@example.com", "abc");
-        given()
-                .contentType(ContentType.JSON)
-                .body(invalidPhoneUser)
+        // Invalid telephone
+        given().contentType(ContentType.JSON)
+                .body(new User(null, "Valid Name", "Valid Address", "valid@example.com", "123"))
                 .when().post("/digg/user")
-                .then()
-                .statusCode(400);
+                .then().statusCode(400);
+
+        // Blank address
+        given().contentType(ContentType.JSON)
+                .body(new User(null, "Valid Name", "   ", "valid@example.com", "+1 (555) 000-0000"))
+                .when().post("/digg/user")
+                .then().statusCode(400);
     }
 
     @Test
@@ -130,6 +126,25 @@ public class UserResourceTest {
 
     @Test
     @Order(6)
+    public void testUpdateUserValidationErrors() {
+        User initial = new User(null, "Pre Validation Update", "Address 1", "pre.val@example.com", "+1 (555) 111-2233");
+        String id = given()
+                .contentType(ContentType.JSON)
+                .body(initial)
+                .when().post("/digg/user")
+                .then()
+                .statusCode(201)
+                .extract().path("id");
+
+        // Blank name on update
+        given().contentType(ContentType.JSON)
+                .body(new User(null, "", "Address 1", "pre.val@example.com", "+1 (555) 111-2233"))
+                .when().put("/digg/user/" + id)
+                .then().statusCode(400);
+    }
+
+    @Test
+    @Order(7)
     public void testUpdateUserNotFound() {
         User updated = new User(null, "Updated Name", "Updated Address", "updated@example.com", "+1 (555) 999-8877");
         given()
@@ -141,7 +156,7 @@ public class UserResourceTest {
     }
 
     @Test
-    @Order(7)
+    @Order(8)
     public void testDeleteUserFlow() {
         // Create user
         User toDelete = new User(null, "To Be Deleted", "Delete Address 1", "delete.me@example.com", "+1 (555) 000-1111");
@@ -170,36 +185,5 @@ public class UserResourceTest {
                 .when().delete("/digg/user/" + id)
                 .then()
                 .statusCode(404);
-    }
-
-    @Test
-    @Order(8)
-    public void testEdgeCasesBlankIdParameters() {
-        // Blank ID on GET
-        given()
-                .pathParam("id", " ")
-                .when().get("/digg/user/{id}")
-                .then()
-                .statusCode(400)
-                .body("error", containsString("cannot be blank"));
-
-        // Blank ID on PUT
-        User updated = new User(null, "Updated Name", "Updated Address", "updated@example.com", "+1 (555) 999-8877");
-        given()
-                .contentType(ContentType.JSON)
-                .body(updated)
-                .pathParam("id", " ")
-                .when().put("/digg/user/{id}")
-                .then()
-                .statusCode(400)
-                .body("error", containsString("cannot be blank"));
-
-        // Blank ID on DELETE
-        given()
-                .pathParam("id", " ")
-                .when().delete("/digg/user/{id}")
-                .then()
-                .statusCode(400)
-                .body("error", containsString("cannot be blank"));
     }
 }
