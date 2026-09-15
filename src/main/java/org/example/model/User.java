@@ -1,6 +1,10 @@
 package org.example.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -9,31 +13,39 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.util.Objects;
 
+@Entity
+@Table(name = "users")
 @Schema(description = "User entity representing a registered person")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
 
-    @Schema(description = "Unique identifier of the user", example = "usr_1001", readOnly = true)
+    @Id
+    @Column(name = "id", length = 64, nullable = false)
+    @Schema(description = "Unique identifier of the user", example = "usr-1001", readOnly = true)
     private String id;
 
     @NotBlank(message = "Name is required")
     @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
+    @Column(name = "name", length = 100, nullable = false)
     @Schema(description = "Full name of the user", example = "Jane Doe", required = true)
     private String name;
 
     @NotBlank(message = "Address is required")
     @Size(min = 3, max = 255, message = "Address must be between 3 and 255 characters")
+    @Column(name = "address", length = 255, nullable = false)
     @Schema(description = "Physical address of the user", example = "123 Main Street, Suite 400, Springfield", required = true)
     private String address;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Email must be a valid email address")
     @Size(max = 120, message = "Email cannot exceed 120 characters")
+    @Column(name = "email", length = 120, nullable = false)
     @Schema(description = "Email address of the user", example = "jane.doe@example.com", required = true)
     private String email;
 
     @NotBlank(message = "Telephone is required")
     @Pattern(regexp = "^[+0-9()\\-\\s]{6,25}$", message = "Telephone must be a valid phone number (6-25 digits/punctuation)")
+    @Column(name = "telephone", length = 25, nullable = false)
     @Schema(description = "Telephone contact number", example = "+1 (555) 234-5678", required = true)
     private String telephone;
 
