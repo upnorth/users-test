@@ -2,6 +2,12 @@
 
 A modern Java/Quarkus REST API with PostgreSQL persistence, OpenAPI compatibility, health endpoints, Docker support, and a responsive Vue 3 SPA frontend with full CRUD operations and client-side pagination.
 
+## Dev notes
+
+- Built in an afternoon in Intellij IDEA with Junie AI (Gemini 3.7 Flash) and manual code review and some manual testing. Worked iteratively from a more basic prototype and reviewed the task instructions multiple times.
+- Not an expert on all technologies in use, but familiar with most of them. Besides task requirements I tried to showcase a bit of my own taste in good naming and readability as well as testing.
+- Note that most of the AI prompts are included in the commit messages.
+
 ## Features
 
 - **REST API**:
