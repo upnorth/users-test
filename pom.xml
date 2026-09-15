@@ -113,7 +113,7 @@
                 <version>1.15.0</version>
                 <configuration>
                     <workingDirectory>frontend</workingDirectory>
-                    <installDirectory>frontend</installDirectory>
+                    <installDirectory>${project.build.directory}/node</installDirectory>
                 </configuration>
                 <executions>
                     <execution>

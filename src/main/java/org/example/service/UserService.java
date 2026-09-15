@@ -89,7 +89,7 @@ public class UserService {
         existing.setAddress(updatedUser.getAddress());
         existing.setEmail(updatedUser.getEmail());
         existing.setTelephone(updatedUser.getTelephone());
-        LOG.debugf("Updated store entry for user: id=%s", id);
+        LOG.debugf("Updated user: id=%s", id);
         return Optional.of(existing);
     }
 
@@ -100,15 +100,9 @@ public class UserService {
         }
         boolean removed = userRepository.deleteById(id);
         if (removed) {
-            LOG.debugf("Removed store entry for user: id=%s", id);
+            LOG.debugf("Deleted user: id=%s", id);
         }
         return removed;
-    }
-
-    @Transactional
-    public void clear() {
-        userRepository.deleteAll();
-        LOG.debug("In-memory store cleared");
     }
 
     public int count() {

@@ -32,7 +32,7 @@ import java.util.Map;
 @Path("/digg/user")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Tag(name = "User API", description = "Operations for managing users in the in-memory store")
+@Tag(name = "User API", description = "Operations for managing users in the repository")
 public class UserResource {
 
     private static final Logger LOG = Logger.getLogger(UserResource.class);
@@ -50,7 +50,7 @@ public class UserResource {
             )
     })
     public List<User> listUsers() {
-        LOG.debug("Fetching all users from in-memory repository");
+        LOG.debug("Fetching all users from repository");
         List<User> users = userService.getAllUsers();
         LOG.debugf("Returning %d user(s)", users.size());
         return users;

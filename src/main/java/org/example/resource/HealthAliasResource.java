@@ -24,14 +24,14 @@ public class HealthAliasResource {
     UserService userService;
 
     @GET
-    @Operation(summary = "Health check", description = "Returns the status of the service and in-memory store")
+    @Operation(summary = "Health check", description = "Returns the status of the service and user repository")
     public Response getHealth() {
         int count = userService.count();
-        LOG.debugf("Health alias endpoint invoked: status=UP, inMemoryUsersCount=%d", count);
+        LOG.debugf("Health alias endpoint invoked: status=UP, usersCount=%d", count);
         return Response.ok(Map.of(
                 "status", "UP",
                 "service", "user-api",
-                "inMemoryUsersCount", count
+                "usersCount", count
         )).build();
     }
 }
