@@ -90,7 +90,7 @@ public class UserResource {
             @RequestBody(description = "User payload to create", required = true,
                     content = @Content(schema = @Schema(implementation = User.class)))
             @Valid User user) {
-        User created = userService.createUser(user);
+        User created = userService.addUser(user);
         return Response.created(URI.create("/digg/user/" + created.getId())).entity(created).build();
     }
 
