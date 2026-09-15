@@ -25,8 +25,9 @@ public class UserResourceTest {
                 .then()
                 .statusCode(200)
                 .contentType(ContentType.JSON)
-                .body("$", hasSize(greaterThanOrEqualTo(1)))
-                .body("name", hasItem("Alice Johnson"));
+                .body("$", hasSize(20))
+                .body("name", hasItem("Alice Johnson"))
+                .body("name", hasItem("Tina Turner"));
     }
 
     @Test

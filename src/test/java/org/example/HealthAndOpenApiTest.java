@@ -51,6 +51,10 @@ public class HealthAndOpenApiTest {
                 .statusCode(200)
                 .contentType(ContentType.HTML)
                 .body(containsString("UserHub"))
-                .body(containsString("Vue 3"));
+                .body(containsString("Vue 3"))
+                .body(containsString("paginatedUsers"))
+                .body(containsString("pageSizeSelect"))
+                .body(containsString("showingStart"))
+                .body(containsString("showingEnd"));
     }
 }
