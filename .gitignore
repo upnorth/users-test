@@ -47,6 +47,9 @@ out/
 ### VS Code ###
 .vscode/
 
+### Junie ###
+.junie/
+
 ### Operating System ###
 # macOS
 .DS_Store
