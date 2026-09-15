@@ -3,6 +3,7 @@ package org.example.service;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.example.model.User;
+import org.jboss.logging.Logger;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -15,12 +16,15 @@ import java.util.concurrent.atomic.AtomicLong;
 @ApplicationScoped
 public class UserService {
 
+    private static final Logger LOG = Logger.getLogger(UserService.class);
+
     private final Map<String, User> userStore = new ConcurrentHashMap<>();
     private final AtomicLong idSequence = new AtomicLong(1000);
 
     @PostConstruct
     void initSampleData() {
         if (userStore.isEmpty()) {
+            LOG.info("Initializing in-memory user repository with seed data...");
             addUser(new User(null, "Alice Johnson", "123 Maple Street, Seattle, WA 98101", "alice.johnson@example.com", "+1 (206) 555-0143"));
             addUser(new User(null, "Bob Smith", "456 Oak Avenue, Austin, TX 78701", "bob.smith@example.com", "+1 (512) 555-0189"));
             addUser(new User(null, "Charlie Brown", "789 Pine Road, Denver, CO 80201", "charlie.brown@example.com", "+1 (303) 555-0122"));
@@ -41,6 +45,7 @@ public class UserService {
             addUser(new User(null, "Rachel Green", "555 Bedford Street, New York, NY 10014", "rachel.green@example.com", "+1 (212) 555-0195"));
             addUser(new User(null, "Steve Rogers", "666 Brooklyn Heights Blvd, Brooklyn, NY 11201", "steve.rogers@example.com", "+1 (718) 555-0150"));
             addUser(new User(null, "Tina Turner", "777 Beale Street, Memphis, TN 38103", "tina.turner@example.com", "+1 (901) 555-0162"));
+            LOG.infof("Initialized in-memory repository with %d seed users", userStore.size());
         }
     }
 
@@ -51,7 +56,7 @@ public class UserService {
     }
 
     public Optional<User> getUserById(String id) {
-        if (id == null) {
+        if (id == null || id.isBlank()) {
             return Optional.empty();
         }
         return Optional.ofNullable(userStore.get(id));
@@ -62,27 +67,34 @@ public class UserService {
             user.setId("usr-" + idSequence.incrementAndGet());
         }
         userStore.put(user.getId(), user);
+        LOG.debugf("Stored user: id=%s", user.getId());
         return user;
     }
 
     public Optional<User> updateUser(String id, User updatedUser) {
-        if (id == null || !userStore.containsKey(id)) {
+        if (id == null || id.isBlank() || !userStore.containsKey(id)) {
             return Optional.empty();
         }
         updatedUser.setId(id);
         userStore.put(id, updatedUser);
+        LOG.debugf("Updated store entry for user: id=%s", id);
         return Optional.of(updatedUser);
     }
 
     public boolean deleteUser(String id) {
-        if (id == null) {
+        if (id == null || id.isBlank()) {
             return false;
         }
-        return userStore.remove(id) != null;
+        boolean removed = userStore.remove(id) != null;
+        if (removed) {
+            LOG.debugf("Removed store entry for user: id=%s", id);
+        }
+        return removed;
     }
 
     public void clear() {
         userStore.clear();
+        LOG.debug("In-memory store cleared");
     }
 
     public int count() {

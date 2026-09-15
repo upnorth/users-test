@@ -171,4 +171,35 @@ public class UserResourceTest {
                 .then()
                 .statusCode(404);
     }
+
+    @Test
+    @Order(8)
+    public void testEdgeCasesBlankIdParameters() {
+        // Blank ID on GET
+        given()
+                .pathParam("id", " ")
+                .when().get("/digg/user/{id}")
+                .then()
+                .statusCode(400)
+                .body("error", containsString("cannot be blank"));
+
+        // Blank ID on PUT
+        User updated = new User(null, "Updated Name", "Updated Address", "updated@example.com", "+1 (555) 999-8877");
+        given()
+                .contentType(ContentType.JSON)
+                .body(updated)
+                .pathParam("id", " ")
+                .when().put("/digg/user/{id}")
+                .then()
+                .statusCode(400)
+                .body("error", containsString("cannot be blank"));
+
+        // Blank ID on DELETE
+        given()
+                .pathParam("id", " ")
+                .when().delete("/digg/user/{id}")
+                .then()
+                .statusCode(400)
+                .body("error", containsString("cannot be blank"));
+    }
 }
