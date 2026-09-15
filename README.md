@@ -34,7 +34,7 @@ A modern Java/Quarkus REST API with PostgreSQL persistence, OpenAPI compatibilit
 ## Getting Started
 
 ### Prerequisites
-- Java 17+
+- Java 21+
 - Docker (required for Quarkus Dev Services during tests/dev mode and containerized execution)
 - Node.js 20+ & npm (optional, only needed for standalone frontend development)
 
