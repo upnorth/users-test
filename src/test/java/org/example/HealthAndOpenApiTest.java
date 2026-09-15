@@ -50,11 +50,8 @@ public class HealthAndOpenApiTest {
                 .then()
                 .statusCode(200)
                 .contentType(ContentType.HTML)
-                .body(containsString("UserHub"))
-                .body(containsString("Vue 3"))
-                .body(containsString("paginatedUsers"))
-                .body(containsString("pageSizeSelect"))
-                .body(containsString("showingStart"))
-                .body(containsString("showingEnd"));
+                .body(containsString("User Management Portal"))
+                .body(containsString("<div id=\"app\"></div>"))
+                .body(containsString("/assets/index-"));
     }
 }

@@ -11,6 +11,12 @@ build/
 ### Quarkus ###
 .quarkus/
 
+### Frontend ###
+frontend/node_modules/
+frontend/node/
+frontend/dist/
+frontend/.vite/
+
 ### Maven & Release ###
 pom.xml.tag
 pom.xml.releaseBackup
