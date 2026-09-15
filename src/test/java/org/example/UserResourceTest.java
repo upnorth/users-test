@@ -3,10 +3,7 @@ package org.example;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import org.example.model.User;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.*;
@@ -14,11 +11,9 @@ import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasSize;
 
 @QuarkusTest
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class UserResourceTest {
 
     @Test
-    @Order(1)
     public void testListUsersInitial() {
         given()
                 .when().get("/digg/user")
@@ -31,7 +26,6 @@ public class UserResourceTest {
     }
 
     @Test
-    @Order(2)
     public void testCreateUserSuccess() {
         User newUser = new User(null, "Test User", "100 Innovation Way, Boston, MA 02110", "test.user@example.com", "+1 (617) 555-0100");
 
@@ -51,7 +45,6 @@ public class UserResourceTest {
     }
 
     @Test
-    @Order(3)
     public void testGetUserByIdSuccess() {
         User user = new User(null, "Lookup User", "123 Lookup Road, Chicago, IL 60601", "lookup@example.com", "+1 (312) 555-0199");
         String id = given()
@@ -75,7 +68,6 @@ public class UserResourceTest {
     }
 
     @Test
-    @Order(4)
     public void testCreateUserValidationErrors() {
         // Invalid email
         given().contentType(ContentType.JSON)
@@ -103,7 +95,6 @@ public class UserResourceTest {
     }
 
     @Test
-    @Order(5)
     public void testGetUserNotFound() {
         given()
                 .when().get("/digg/user/non-existent-user-id-9999")
@@ -113,7 +104,6 @@ public class UserResourceTest {
     }
 
     @Test
-    @Order(6)
     public void testUpdateUserSuccess() {
         // Create user first
         User initial = new User(null, "Original Name", "Original Address", "original@example.com", "+1 (555) 111-2233");
@@ -141,7 +131,6 @@ public class UserResourceTest {
     }
 
     @Test
-    @Order(7)
     public void testUpdateUserValidationErrors() {
         User initial = new User(null, "Pre Validation Update", "Address 1", "pre.val@example.com", "+1 (555) 111-2233");
         String id = given()
@@ -160,7 +149,6 @@ public class UserResourceTest {
     }
 
     @Test
-    @Order(8)
     public void testUpdateUserNotFound() {
         User updated = new User(null, "Updated Name", "Updated Address", "updated@example.com", "+1 (555) 999-8877");
         given()
@@ -172,7 +160,6 @@ public class UserResourceTest {
     }
 
     @Test
-    @Order(9)
     public void testDeleteUserFlow() {
         // Create user
         User toDelete = new User(null, "To Be Deleted", "Delete Address 1", "delete.me@example.com", "+1 (555) 000-1111");
