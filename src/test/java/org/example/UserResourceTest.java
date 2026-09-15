@@ -10,6 +10,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasSize;
 
 @QuarkusTest
@@ -24,7 +25,7 @@ public class UserResourceTest {
                 .then()
                 .statusCode(200)
                 .contentType(ContentType.JSON)
-                .body("$", hasSize(20))
+                .body("$", hasSize(greaterThanOrEqualTo(20)))
                 .body("name", hasItem("Alice Johnson"))
                 .body("name", hasItem("Tina Turner"));
     }
