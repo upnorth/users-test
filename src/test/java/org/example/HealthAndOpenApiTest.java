@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 
 @QuarkusTest
 public class HealthAndOpenApiTest {
@@ -18,7 +19,8 @@ public class HealthAndOpenApiTest {
                 .statusCode(200)
                 .contentType(ContentType.JSON)
                 .body("status", equalTo("UP"))
-                .body("service", equalTo("user-api"));
+                .body("service", equalTo("user-api"))
+                .body("usersCount", greaterThanOrEqualTo(20));
     }
 
     @Test
@@ -41,6 +43,15 @@ public class HealthAndOpenApiTest {
                 .statusCode(200)
                 .body(containsString("/digg/user"))
                 .body(containsString("User API"));
+    }
+
+    @Test
+    public void testSwaggerUiEndpoint() {
+        given()
+                .when().get("/q/swagger-ui")
+                .then()
+                .statusCode(200)
+                .body(containsString("swagger-ui"));
     }
 
     @Test

@@ -35,7 +35,7 @@ public class UserResourceTest {
     public void testCreateUserSuccess() {
         User newUser = new User(null, "Test User", "100 Innovation Way, Boston, MA 02110", "test.user@example.com", "+1 (617) 555-0100");
 
-        String userId = given()
+        given()
                 .contentType(ContentType.JSON)
                 .body(newUser)
                 .when().post("/digg/user")
@@ -47,20 +47,35 @@ public class UserResourceTest {
                 .body("name", equalTo("Test User"))
                 .body("email", equalTo("test.user@example.com"))
                 .body("telephone", equalTo("+1 (617) 555-0100"))
-                .body("address", equalTo("100 Innovation Way, Boston, MA 02110"))
-                .extract().path("id");
-
-        // Verify retrieval
-        given()
-                .when().get("/digg/user/" + userId)
-                .then()
-                .statusCode(200)
-                .body("id", equalTo(userId))
-                .body("name", equalTo("Test User"));
+                .body("address", equalTo("100 Innovation Way, Boston, MA 02110"));
     }
 
     @Test
     @Order(3)
+    public void testGetUserByIdSuccess() {
+        User user = new User(null, "Lookup User", "123 Lookup Road, Chicago, IL 60601", "lookup@example.com", "+1 (312) 555-0199");
+        String id = given()
+                .contentType(ContentType.JSON)
+                .body(user)
+                .when().post("/digg/user")
+                .then()
+                .statusCode(201)
+                .extract().path("id");
+
+        given()
+                .when().get("/digg/user/" + id)
+                .then()
+                .statusCode(200)
+                .contentType(ContentType.JSON)
+                .body("id", equalTo(id))
+                .body("name", equalTo("Lookup User"))
+                .body("address", equalTo("123 Lookup Road, Chicago, IL 60601"))
+                .body("email", equalTo("lookup@example.com"))
+                .body("telephone", equalTo("+1 (312) 555-0199"));
+    }
+
+    @Test
+    @Order(4)
     public void testCreateUserValidationErrors() {
         // Invalid email
         given().contentType(ContentType.JSON)
@@ -88,7 +103,7 @@ public class UserResourceTest {
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     public void testGetUserNotFound() {
         given()
                 .when().get("/digg/user/non-existent-user-id-9999")
@@ -98,7 +113,7 @@ public class UserResourceTest {
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     public void testUpdateUserSuccess() {
         // Create user first
         User initial = new User(null, "Original Name", "Original Address", "original@example.com", "+1 (555) 111-2233");
@@ -126,7 +141,7 @@ public class UserResourceTest {
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     public void testUpdateUserValidationErrors() {
         User initial = new User(null, "Pre Validation Update", "Address 1", "pre.val@example.com", "+1 (555) 111-2233");
         String id = given()
@@ -145,7 +160,7 @@ public class UserResourceTest {
     }
 
     @Test
-    @Order(7)
+    @Order(8)
     public void testUpdateUserNotFound() {
         User updated = new User(null, "Updated Name", "Updated Address", "updated@example.com", "+1 (555) 999-8877");
         given()
@@ -157,7 +172,7 @@ public class UserResourceTest {
     }
 
     @Test
-    @Order(8)
+    @Order(9)
     public void testDeleteUserFlow() {
         // Create user
         User toDelete = new User(null, "To Be Deleted", "Delete Address 1", "delete.me@example.com", "+1 (555) 000-1111");
